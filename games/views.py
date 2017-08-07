@@ -39,8 +39,8 @@ class BetViewSet(viewsets.ModelViewSet):
 		player = self.request.user
 
 		#get game
-		game = get_object_or_404(Game,identifier=self.request.POST['game_identifier'],is_active=True)
-
+		game = get_object_or_404(Game,identifier=self.request.data['game_identifier'],is_active=True)
+        
 		serializer.save(player=player, game=game)
 
 
