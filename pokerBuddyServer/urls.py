@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.conf.urls import url, include
 from users.views import UserViewSet
-from games.views import GameViewSet
+from games.views import GameViewSet, BetViewSet
 from rest_framework import routers
 from rest_framework.authtoken import views
 from django.contrib import admin
@@ -25,6 +25,7 @@ from django.contrib import admin
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'games', GameViewSet)
+router.register(r'bets', BetViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
