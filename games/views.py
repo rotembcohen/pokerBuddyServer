@@ -43,8 +43,12 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		bet, created = Bet.objects.get_or_create(
 			game=game,
-			player=player
+			player=player,
 		)
+
+		if created:
+			bet.amount = game.min_bet
+			bet.save()
 
 		serializer = GameSerializer(context={'request': request},instance=game)
 
