@@ -71,7 +71,10 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		bet = Bet.objects.get(player=player,game__identifier=identifier,game__is_active=True)
 
+		#update amount and clear result
 		bet.amount = bet.amount + request.data['amount']
+		bet.result = None
+
 		bet.save()
 
 		serializer = GameSerializer(context={'request': request},instance=bet.game)
