@@ -42,19 +42,25 @@ class GameViewSet(viewsets.ModelViewSet):
 		game = Game.objects.get(identifier=identifier)
 
 		bet, created = Bet.objects.get_or_create(
-		game=game,
-		player=player,
+			game=game,
+			player=player,
 		)
 
 		if created:
+			#created, set bet to game's bet
+			#TODO: allow for special cases?
 			bet.amount = game.min_bet
-			bet.save()
-
+		else:
+			#returning player, clear result
+			bet.result = None
+		
+		bet.save()
+		
 		serializer = GameSerializer(context={'request': request},instance=game)
 
 		return Response(serializer.data)
 
-
+	#TODO: change permissions to user only? may contradict "allow different player"
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def buy_in(self,request,identifier=None):
 
@@ -72,4 +78,18 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
+	#TODO: change permissions to user only? may contradict "allow different player"
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def leave_game(self,request,identifier=None):
 
+		#TODO: allow for different player to be specified
+		player = request.user
+
+		bet = Bet.objects.get(player=player,game__identifier=identifier)
+
+		bet.result = request.data['result']
+		bet.save()
+
+		serializer = GameSerializer(context={'request': request}, instance=bet.game)
+
+		return Response(serializer.data)
