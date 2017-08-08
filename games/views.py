@@ -14,36 +14,36 @@ import random
 import string
 
 class GameViewSet(viewsets.ModelViewSet):
-    queryset = Game.objects.all()
-    serializer_class = GameSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    lookup_field = 'identifier'
+	queryset = Game.objects.all()
+	serializer_class = GameSerializer
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	lookup_field = 'identifier'
 
-    def perform_create(self, serializer):
-    	#randomize identifier
-    	IDENTIFIER_LEN = 5
-        identifier = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(IDENTIFIER_LEN))
+	def perform_create(self, serializer):
+		#randomize identifier
+		IDENTIFIER_LEN = 5
+		identifier = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(IDENTIFIER_LEN))
 
-        #associate host to current logged in user
-        host = self.request.user
+		#associate host to current logged in user
+		host = self.request.user
 
-        #create active game
-        is_active = True
-    	
-    	serializer.save(host=host,identifier=identifier,is_active=is_active)
+		#create active game
+		is_active = True
+
+		serializer.save(host=host,identifier=identifier,is_active=is_active)
 
 
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticated])
-    def join_game(self,request,identifier=None):
-	    
-    	#TODO:allow for different player to be specified
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def join_game(self,request,identifier=None):
+
+		#TODO:allow for different player to be specified
 		player = request.user
 
 		game = Game.objects.get(identifier=identifier)
 
 		bet, created = Bet.objects.get_or_create(
-			game=game,
-			player=player,
+		game=game,
+		player=player,
 		)
 
 		if created:
@@ -54,12 +54,22 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
-		
-	
+
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def buy_in(self,request,identifier=None):
+
+		#TODO:allow for different player to be specified
+		#TODO:duplicate code?
+		#TODO:get_or_404
+		player = request.user
+
+		bet = Bet.objects.get(player=player,game__identifier=identifier,game__is_active=True)
+
+		bet.amount = bet.amount + request.data['amount']
+		bet.save()
+
+		serializer = GameSerializer(context={'request': request},instance=bet.game)
+
+		return Response(serializer.data)
 
 
-
-
-		
-
-    
