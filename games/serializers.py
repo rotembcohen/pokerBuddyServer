@@ -3,9 +3,18 @@ from rest_framework import serializers
 from games.models import Game, Bet
 from users.models import User
 
-class GameSerializer(serializers.HyperlinkedModelSerializer):
+class BetSerializer(serializers.ModelSerializer):
 
-	bets = serializers.StringRelatedField(many=True,read_only=True,allow_empty=True)
+	player = serializers.StringRelatedField(read_only=True)
+
+	class Meta:
+		model = Bet
+		exclude = ('id','game')
+
+
+class GameSerializer(serializers.ModelSerializer):
+
+	bets = BetSerializer(many=True,read_only=True,allow_empty=True)
 
 	identifier = serializers.CharField(required=False,read_only=True)
 	host = serializers.StringRelatedField(
