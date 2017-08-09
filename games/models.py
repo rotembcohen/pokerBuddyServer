@@ -25,7 +25,7 @@ class Bet(models.Model):
 	player = models.ForeignKey(User,related_name='bets',on_delete=models.CASCADE)
 	game = models.ForeignKey(Game,related_name='bets',on_delete=models.CASCADE)
 	amount = models.DecimalField(default=20.0,max_digits=12,decimal_places=2,validators=[MinValueValidator(Decimal('0.01'))])
-	result = models.DecimalField(default=None,max_digits=12,decimal_places=2,null=True)
+	result = models.DecimalField(default=None,max_digits=12,null=True,decimal_places=2,validators=[MinValueValidator(Decimal('0.01'))])
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
