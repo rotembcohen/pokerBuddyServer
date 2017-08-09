@@ -19,7 +19,7 @@ class GameSerializer(serializers.ModelSerializer):
 	bets = BetSerializer(many=True,read_only=True,allow_empty=True)
 
 	identifier = serializers.CharField(required=False,read_only=True)
-	host = serializers.StringRelatedField(
+	host = serializers.PrimaryKeyRelatedField(
 		required=False
 	)
 
