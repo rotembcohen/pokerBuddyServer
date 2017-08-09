@@ -67,7 +67,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		#TODO:allow for different player to be specified
 		if request.data['player_id']:
-			player = User.objects.get_or_404(pk=request.data['player_id'])
+			player = get_object_or_404(User,pk=request.data['player_id'])
 		else:
 			player = request.user
 		
@@ -91,7 +91,7 @@ class GameViewSet(viewsets.ModelViewSet):
 	def leave_game(self,request,identifier=None):
 
 		if request.data['player_id']:
-			player = User.objects.get_or_404(pk=request.data['player_id'])
+			player = get_object_or_404(User,pk=request.data['player_id'])
 		else:
 			player = request.user
 
