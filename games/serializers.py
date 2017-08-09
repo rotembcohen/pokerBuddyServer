@@ -6,10 +6,11 @@ from users.models import User
 class BetSerializer(serializers.ModelSerializer):
 
 	player = serializers.StringRelatedField(read_only=True)
+	game = serializers.StringRelatedField(read_only=True)
 
 	class Meta:
 		model = Bet
-		exclude = ('game',)
+		fields = '__all__'
 
 
 class GameSerializer(serializers.ModelSerializer):

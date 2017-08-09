@@ -96,3 +96,4 @@ class GameViewSet(viewsets.ModelViewSet):
 		serializer = GameSerializer(context={'request': request}, instance=bet.game)
 
 		return Response(serializer.data)
+
