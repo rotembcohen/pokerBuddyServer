@@ -2,10 +2,11 @@ from rest_framework import serializers
 
 from games.models import Game, Bet
 from users.models import User
+from users.serializers import UserSerializer
 
 class BetSerializer(serializers.ModelSerializer):
 
-	player = serializers.StringRelatedField(read_only=True)
+	player = UserSerializer(read_only=True)
 	game = serializers.StringRelatedField(read_only=True)
 
 	class Meta:
