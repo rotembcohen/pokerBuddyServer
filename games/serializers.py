@@ -20,7 +20,8 @@ class GameSerializer(serializers.ModelSerializer):
 
 	identifier = serializers.CharField(required=False,read_only=True)
 	host = serializers.PrimaryKeyRelatedField(
-		required=False
+		required=False,
+		read_only=True
 	)
 
 	class Meta:
