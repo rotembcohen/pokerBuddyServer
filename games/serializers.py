@@ -9,7 +9,7 @@ class BetSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Bet
-		exclude = ('id','game')
+		exclude = ('game')
 
 
 class GameSerializer(serializers.ModelSerializer):
