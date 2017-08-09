@@ -65,10 +65,14 @@ class GameViewSet(viewsets.ModelViewSet):
 	def buy_in(self,request,identifier=None):
 
 		#TODO:allow for different player to be specified
+		if request.data['player_id']:
+			player = User.objects.get_or_404(pk=request.data['player_id'])
+		else:
+			player = request.user
+		
 		#TODO:duplicate code?
 		#TODO:get_or_404
-		player = request.user
-
+		
 		bet = Bet.objects.get(player=player,game__identifier=identifier,game__is_active=True)
 
 		#update amount and clear result
@@ -85,8 +89,10 @@ class GameViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def leave_game(self,request,identifier=None):
 
-		#TODO: allow for different player to be specified
-		player = request.user
+		if request.data['player_id']:
+			player = User.objects.get_or_404(pk=request.data['player_id'])
+		else:
+			player = request.user
 
 		bet = Bet.objects.get(player=player,game__identifier=identifier)
 
