@@ -36,7 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
-	@detail_route(methods=['post'], [permission_classes=[IsAuthenticated]])
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def update_venmo(self,request,pk=None):
 
 		user = get_object_or_404(User,pk=pk)
