@@ -37,8 +37,11 @@ class GameViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def join_game(self,request,identifier=None):
 
-		#TODO:allow for different player to be specified
-		player = request.user
+		#TODO: check if user already in the game
+		if request.data['player_id']:
+			player = get_object_or_404(User,pk=request.data['player_id'])
+		else:
+			player = request.user
 
 		game = Game.objects.get(identifier=identifier)
 
@@ -65,7 +68,6 @@ class GameViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def buy_in(self,request,identifier=None):
 
-		#TODO:allow for different player to be specified
 		if request.data['player_id']:
 			player = get_object_or_404(User,pk=request.data['player_id'])
 		else:
