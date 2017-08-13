@@ -11,8 +11,17 @@ from users.models import User
 from games.models import Game, Bet
 from games.serializers import GameSerializer
 
+import pusher
 import random
 import string
+
+pusher_client = pusher.Pusher(
+	app_id='382853',
+	key='442e9fce1c86b001266e',
+	secret='c8da83b9b8390ec9a2c3',
+	cluster='us2',
+	ssl=True
+)
 
 class GameViewSet(viewsets.ModelViewSet):
 	queryset = Game.objects.all()
@@ -60,6 +69,8 @@ class GameViewSet(viewsets.ModelViewSet):
 		
 		bet.save()
 		
+		pusher_client.trigger(game.identifier, 'game-update', {'game': game});
+		
 		serializer = GameSerializer(context={'request': request},instance=game)
 
 		return Response(serializer.data)
@@ -84,6 +95,8 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		bet.save()
 
+		pusher_client.trigger(game.identifier, 'game-update', {'game': bet.game});
+
 		serializer = GameSerializer(context={'request': request},instance=bet.game)
 
 		return Response(serializer.data)
@@ -102,6 +115,8 @@ class GameViewSet(viewsets.ModelViewSet):
 		bet.result = request.data['result']
 		bet.save()
 
+		pusher_client.trigger(game.identifier, 'game-update', {'game': bet.game});
+
 		serializer = GameSerializer(context={'request': request}, instance=bet.game)
 
 		return Response(serializer.data)
@@ -113,6 +128,8 @@ class GameViewSet(viewsets.ModelViewSet):
 		game = get_object_or_404(Game,identifier=identifier);
 		game.is_active = False;
 		game.save()
+
+		pusher_client.trigger(game.identifier, 'game-update', {'game': game});
 
 		serializer = GameSerializer(context={'request': request}, instance=game)
 
