@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import routers, serializers, viewsets
 from rest_framework.decorators import detail_route, list_route, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -33,5 +33,16 @@ class UserViewSet(viewsets.ModelViewSet):
 			many=True,
 			context={'request': request}
 		)
+
+		return Response(serializer.data)
+
+	@detail_route(methods=['post'], [permission_classes=[IsAuthenticated]])
+	def update_venmo(self,request,pk=None):
+
+		user = get_object_or_404(User,pk=pk)
+		user.venmo_username = request.data['venmo_username']
+		user.save()
+
+		serializer = UserSerializer(context={'request': request}, instance=user)
 
 		return Response(serializer.data)
