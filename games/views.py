@@ -106,3 +106,15 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
+	#TODO: change permissions to host only
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def finish_game(self,request,identifier=None):
+
+		game = get_object_or_404(Game,identifier=identifier);
+		game.is_active = False;
+		game.save()
+
+		serializer = GameSerializer(context={'request': request}, instance=game)
+
+		return Response(serializer.data)
+
