@@ -32,7 +32,7 @@ class GameViewSet(viewsets.ModelViewSet):
 	def perform_create(self, serializer):
 		#randomize identifier
 		IDENTIFIER_LEN = 5
-		identifier = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(IDENTIFIER_LEN))
+		identifier = ''.join(random.choice(string.ascii_uppercase) for _ in range(IDENTIFIER_LEN))
 
 		#associate host to current logged in user
 		host = self.request.user
