@@ -63,11 +63,7 @@ class GameViewSet(viewsets.ModelViewSet):
 			#created, set bet to game's bet
 			#TODO: allow for special cases?
 			bet.amount = game.min_bet
-		else:
-			#returning player, clear result
-			bet.result = None
-		
-		bet.save()
+			bet.save()
 		
 		#pusher_client.trigger(game.identifier, 'game-update', {'game': game});
 		
