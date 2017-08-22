@@ -46,3 +46,17 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer = UserSerializer(context={'request': request}, instance=user)
 
 		return Response(serializer.data)
+
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def push_token(self,request,pk=None):
+
+		user_id = request.data['user_id']
+		token = request.data['push_token']
+
+		user = get_object_or_404(User,pk=user_id)
+		user.push_token = token
+		user.save()
+		
+		serializer = UserSerializer(context={'request': request}, instance=user)
+
+		return Response(serializer.data)
