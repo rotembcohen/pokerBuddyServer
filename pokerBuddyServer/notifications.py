@@ -6,11 +6,11 @@ from requests.exceptions import ConnectionError, HTTPError
 # Basic arguments. You should extend this function with the push features you
 # want to use, or simply pass in a `PushMessage` object.
 def send_push_message(token, message, extra=None):
-    try:
-        response = PushClient().publish(
-            PushMessage(to=token,
-                        body=message,
-                        data=extra))
+#    try:
+    response = PushClient().publish(
+        PushMessage(to=token,
+        body=message,
+        data=extra))
     # except PushServerError as exc:
     #     # Encountered some likely formatting/validation error.
     #     rollbar.report_exc_info(
@@ -29,11 +29,11 @@ def send_push_message(token, message, extra=None):
     #         extra_data={'token': token, 'message': message, 'extra': extra})
     #     raise self.retry(exc=exc)
 
-    try:
-        # We got a response back, but we don't know whether it's an error yet.
-        # This call raises errors so we can handle them with normal exception
-        # flows.
-        response.validate_response()
+    #try:
+    # We got a response back, but we don't know whether it's an error yet.
+    # This call raises errors so we can handle them with normal exception
+    # flows.
+    response.validate_response()
     # except DeviceNotRegisteredError:
     #     # Mark the push token as inactive
     #     from notifications.models import PushToken

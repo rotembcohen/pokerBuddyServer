@@ -11,7 +11,7 @@ from users.models import User
 from games.models import Game, Bet
 from games.serializers import GameSerializer
 
-from .notifications import send_push_message
+from pokerBuddyServer import notifications
 
 #import pusher
 import random
@@ -95,7 +95,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		#TODO: work in progress
 		# for b in bet.game.bets.exclude(player__push_token__isnull=True)
-		send_push_message(bet.player.push_token, "bought in",{
+		notifications.send_push_message(bet.player.push_token, "bought in",{
 			'updated_bet': bet,
 		})
 
