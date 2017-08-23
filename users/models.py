@@ -16,6 +16,12 @@ class User(AbstractUser):
 	picture_url = models.CharField(max_length=255, blank=True, null=True)
 	push_token = models.CharField(max_length=255, blank=True, null=True)
 
+	def __unicode__(self):
+		if (self.first_name and self.last_name):
+			return self.first_name + " " + self.last_name
+		else:
+			return self.username
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
