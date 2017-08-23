@@ -95,9 +95,9 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		#TODO: work in progress
 		# for b in bet.game.bets.exclude(player__push_token__isnull=True)
-		# send_push_message(b.player.push_token, str(b.player) + " bought in",{
-		# 		'updated_bet': bet,
-		# 	})
+		send_push_message(bet.player.push_token, "bought in",{
+			'updated_bet': bet,
+		})
 
 		#pusher_client.trigger(game.identifier, 'game-update', {'game': bet.game});
 
