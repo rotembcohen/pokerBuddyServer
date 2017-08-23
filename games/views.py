@@ -11,6 +11,8 @@ from users.models import User
 from games.models import Game, Bet
 from games.serializers import GameSerializer
 
+from .notifications import send_push_message
+
 #import pusher
 import random
 import string
@@ -90,6 +92,12 @@ class GameViewSet(viewsets.ModelViewSet):
 		bet.result = None
 
 		bet.save()
+
+		#TODO: work in progress
+		# for b in bet.game.bets.exclude(player__push_token__isnull=True)
+		# send_push_message(b.player.push_token, str(b.player) + " bought in",{
+		# 		'updated_bet': bet,
+		# 	})
 
 		#pusher_client.trigger(game.identifier, 'game-update', {'game': bet.game});
 
