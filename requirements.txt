@@ -1,6 +1,7 @@
 Django==1.11.4
 django-filter==1.0.4
 djangorestframework==3.6.3
+exponent-server-sdk==0.1.1
 Markdown==2.6.8
 pusher==1.7.2
 pytz==2017.2
