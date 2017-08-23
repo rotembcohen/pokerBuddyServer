@@ -11,19 +11,10 @@ from users.models import User
 from games.models import Game, Bet
 from games.serializers import GameSerializer
 
-from pokerBuddyServer import notifications
+#from pokerBuddyServer import notifications
 
-#import pusher
 import random
 import string
-
-# pusher_client = pusher.Pusher(
-# 	app_id='382853',
-# 	key='442e9fce1c86b001266e',
-# 	secret='c8da83b9b8390ec9a2c3',
-# 	cluster='us2',
-# 	ssl=True
-# )
 
 class GameViewSet(viewsets.ModelViewSet):
 	queryset = Game.objects.all()
@@ -66,8 +57,11 @@ class GameViewSet(viewsets.ModelViewSet):
 			#TODO: allow for special cases?
 			bet.amount = game.min_bet
 			bet.save()
-		
-		#pusher_client.trigger(game.identifier, 'game-update', {'game': game});
+			
+			#TODO: this is an example of how it works. this should be used in the payView when ready
+			#send push notifications:
+			# for b in bet.game.bets.exclude(player__push_token__isnull=True)
+			# 	notifications.send_push_message(b.player.push_token, str(player) + " joined your game",{game_identifier:identifier})
 		
 		serializer = GameSerializer(context={'request': request},instance=game)
 
@@ -95,10 +89,6 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		serializer = GameSerializer(context={'request': request},instance=bet.game)
 
-		#TODO: work in progress
-		# for b in bet.game.bets.exclude(player__push_token__isnull=True)
-		notifications.send_push_message(bet.player.push_token, "bought in",serializer.data)
-
 		return Response(serializer.data)
 
 	#TODO: change permissions to user only? may contradict "allow different player"
@@ -115,8 +105,6 @@ class GameViewSet(viewsets.ModelViewSet):
 		bet.result = request.data['result']
 		bet.save()
 
-		#pusher_client.trigger(game.identifier, 'game-update', {'game': bet.game});
-
 		serializer = GameSerializer(context={'request': request}, instance=bet.game)
 
 		return Response(serializer.data)
@@ -128,8 +116,6 @@ class GameViewSet(viewsets.ModelViewSet):
 		game = get_object_or_404(Game,identifier=identifier);
 		game.is_active = False;
 		game.save()
-
-		#pusher_client.trigger(game.identifier, 'game-update', {'game': game});
 
 		serializer = GameSerializer(context={'request': request}, instance=game)
 
