@@ -93,15 +93,11 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		bet.save()
 
+		serializer = GameSerializer(context={'request': request},instance=bet.game)
+
 		#TODO: work in progress
 		# for b in bet.game.bets.exclude(player__push_token__isnull=True)
-		notifications.send_push_message(bet.player.push_token, "bought in",{
-			'updated_bet': bet,
-		})
-
-		#pusher_client.trigger(game.identifier, 'game-update', {'game': bet.game});
-
-		serializer = GameSerializer(context={'request': request},instance=bet.game)
+		notifications.send_push_message(bet.player.push_token, "bought in",serializer.data)
 
 		return Response(serializer.data)
 
