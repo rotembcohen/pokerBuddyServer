@@ -13,8 +13,17 @@ from games.serializers import GameSerializer
 
 #from pokerBuddyServer import notifications
 
+import pusher
 import random
 import string
+
+pusher_client = pusher.Pusher(
+	app_id='382853',
+	key='442e9fce1c86b001266e',
+	secret='c8da83b9b8390ec9a2c3',
+	cluster='us2',
+	ssl=True
+)
 
 class GameViewSet(viewsets.ModelViewSet):
 	queryset = Game.objects.all()
@@ -57,6 +66,8 @@ class GameViewSet(viewsets.ModelViewSet):
 			#TODO: allow for special cases?
 			bet.amount = game.min_bet
 			bet.save()
+		
+		pusher_client.trigger('my-channel', 'game-update', {'game': game});
 			
 			#TODO: this is an example of how it works. this should be used in the payView when ready
 			#send push notifications:
