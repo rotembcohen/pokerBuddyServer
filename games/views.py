@@ -99,7 +99,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		serializer = GameSerializer(context={'request': request},instance=bet.game)
 
-		pusher_client.trigger('my-channel', 'game-update', {'game': serializer.data});
+		pusher_client.trigger(bet.game.identifier, 'game-update', {'game': serializer.data});
 
 		return Response(serializer.data)
 
