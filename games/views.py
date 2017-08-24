@@ -75,6 +75,8 @@ class GameViewSet(viewsets.ModelViewSet):
 		
 		serializer = GameSerializer(context={'request': request},instance=game)
 
+		pusher_client.trigger(bet.game.identifier, 'game-update', {'game': serializer.data});
+
 		return Response(serializer.data)
 
 	#TODO: change permissions to user only? may contradict "allow different player"
@@ -118,6 +120,8 @@ class GameViewSet(viewsets.ModelViewSet):
 		bet.save()
 
 		serializer = GameSerializer(context={'request': request}, instance=bet.game)
+
+		pusher_client.trigger(bet.game.identifier, 'game-update', {'game': serializer.data});
 
 		return Response(serializer.data)
 
