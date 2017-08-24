@@ -36,6 +36,21 @@ class UserViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
+	#TODO: change permissions to user only?
+	#TODO: also protect info change by non target user
+	@detail_route(methods=['get'], permission_classes=[IsAuthenticated])
+	def past_games(self,request,pk=None):
+
+		past_bets = Bet.objects.filter(game__is_active=False,player__pk=pk)
+
+		serializer = BetSerializer(
+			past_bets,
+			many=True,
+			context={'request': request}
+		)
+
+		return Response(serializer.data)
+
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def update_venmo(self,request,pk=None):
 
