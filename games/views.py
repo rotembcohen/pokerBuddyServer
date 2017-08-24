@@ -67,7 +67,6 @@ class GameViewSet(viewsets.ModelViewSet):
 			bet.amount = game.min_bet
 			bet.save()
 		
-		pusher_client.trigger('my-channel', 'game-update', {'game': game});
 			
 			#TODO: this is an example of how it works. this should be used in the payView when ready
 			#send push notifications:
@@ -97,6 +96,8 @@ class GameViewSet(viewsets.ModelViewSet):
 		bet.result = None
 
 		bet.save()
+
+		pusher_client.trigger('my-channel', 'game-update', {'game': bet.game});
 
 		serializer = GameSerializer(context={'request': request},instance=bet.game)
 
