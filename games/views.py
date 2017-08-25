@@ -8,7 +8,7 @@ from rest_framework.decorators import detail_route, list_route, permission_class
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.models import User
-from games.models import Game, Bet
+from games.models import Game, Bet, Payment
 from games.serializers import GameSerializer
 
 #from pokerBuddyServer import notifications
@@ -129,8 +129,8 @@ class GameViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def finish_game(self,request,identifier=None):
 
-		game = get_object_or_404(Game,identifier=identifier);
-		game.is_active = False;
+		game = get_object_or_404(Game,identifier=identifier)
+		game.is_active = False
 		game.save()
 
 		serializer = GameSerializer(context={'request': request}, instance=game)
@@ -138,4 +138,34 @@ class GameViewSet(viewsets.ModelViewSet):
 		pusher_client.trigger(game.identifier, 'game-update', {'game': serializer.data});
 
 		return Response(serializer.data)
+
+	#TODO: change permissions to user and host only
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def confirm_payment(self,request,identifier=None):
+
+		source_id = request.data['source_id']
+		source = get_object_or_404(User,pk=source_id)
+		amount = request.data['amount']
+		target = request.user
+
+		bet = get_object_or_404(Bet,game__identifier=identifier,player=target)
+
+		payment, created = Payment.objects.get_or_create(
+			source=source,
+			bet=bet,
+			defaults={'amount':amount}
+		)
+
+		#overrides amount if not equal
+		if not created:
+			payment.amount = amount
+			payment.save()
+		
+		serializer = GameSerializer(context={'request': request}, instance=bet.game)
+
+		pusher_client.trigger(bet.game.identifier, 'game-update', {'game': serializer.data});
+
+		return Response(serializer.data)
+
+
 
