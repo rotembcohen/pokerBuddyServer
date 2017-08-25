@@ -172,5 +172,25 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
+	#TODO: change permissions to game host only
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def approve_game(self,request,identifier=None):
+
+		game = get_object_or_404(Game,identifier=identifier)
+		is_approved = request.data['is_approved']
+
+		#make sure input val is boolean
+		if not isinstance(is_approved, bool):
+			#TODO: should be error
+			return
+
+		game.is_approved = is_approved
+		game.save()
+
+		serializer = GameSerializer(context={'request': request}, instance=game)
+
+		pusher_client.trigger(game.identifier, 'game-update', {'game': serializer.data});
+
+		return Response(serializer.data)
 
 
