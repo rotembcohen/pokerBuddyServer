@@ -143,10 +143,9 @@ class GameViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def confirm_payment(self,request,identifier=None):
 
-		source_id = request.data['source_id']
-		source = get_object_or_404(User,pk=source_id)
+		source = get_object_or_404(User,pk=request.data['source_id'])
 		amount = request.data['amount']
-		target = request.user
+		target = get_object_or_404(User,pk=request.data['target_id'])
 
 		if source == target:
 			#TODO:should be error
