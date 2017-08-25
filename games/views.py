@@ -148,6 +148,12 @@ class GameViewSet(viewsets.ModelViewSet):
 		amount = request.data['amount']
 		target = request.user
 
+		if source == target:
+			#TODO:should be error
+			return
+
+		#TODO: also check if amount bigger than result amount
+
 		bet = get_object_or_404(Bet,game__identifier=identifier,player=target)
 
 		payment, created = Payment.objects.get_or_create(
