@@ -6,6 +6,9 @@ from users.serializers import UserSerializer
 
 class PaymentSerializer(serializers.ModelSerializer):
 
+	source = UserSerializer(read_only=True)
+	target = UserSerializer(read_only=True)
+
 	class Meta:
 		model = Payment
 		fields = '__all__'
