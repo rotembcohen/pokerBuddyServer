@@ -26,7 +26,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['get'], permission_classes=[IsAuthenticated])
 	def active_games(self,request,pk=None):
 
-		active_bets = Bet.objects.filter(game__is_active=True,player__pk=pk)
+		active_bets = Bet.objects.filter(game__is_active=True,player__pk=pk).order_by('-created_at')
 
 		serializer = BetSerializer(
 			active_bets,
@@ -41,7 +41,7 @@ class UserViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['get'], permission_classes=[IsAuthenticated])
 	def past_games(self,request,pk=None):
 
-		past_bets = Bet.objects.filter(game__is_active=False,player__pk=pk)
+		past_bets = Bet.objects.filter(game__is_active=False,player__pk=pk).order_by('-created_at')
 
 		serializer = BetSerializer(
 			past_bets,
