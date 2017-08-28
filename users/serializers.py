@@ -4,7 +4,7 @@ from users.models import User
 class UserSerializer(serializers.ModelSerializer):
 
 	password = serializers.CharField(write_only=True)
-	profit = serializers.DecimalField(max_digits=12, decimal_places=2,read_only=True)
+	profit = serializers.DecimalField(max_digits=12, decimal_places=2)
 	
 	def create(self, validated_data):
 
