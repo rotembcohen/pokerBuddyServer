@@ -14,9 +14,12 @@ from games.serializers import BetSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
-	queryset = User.objects.annotate(profit=Sum('bets__result')-Sum('bets__amount'))
+	queryset = User.objects.all()
 	serializer_class = UserSerializer
 	
+	def get_queryset(self):
+        return User.objects.annotate(profit=Sum('bets__result')-Sum('bets__amount'))
+
 	def get_permissions(self):
 		# allow non-authenticated user to create via POST
 		return (AllowAny() if self.request.method == 'POST'
