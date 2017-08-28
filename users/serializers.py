@@ -17,5 +17,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		fields = ('id','password','username','email','venmo_username','phone_number','first_name','last_name','picture_url','facebook_token','push_token')
+		fields = ('__all__')
 		extra_kwargs = {'password': {'write_only': True}}

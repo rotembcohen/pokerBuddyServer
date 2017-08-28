@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Sum
 from rest_framework import routers, serializers, viewsets
 from rest_framework.decorators import detail_route, list_route, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -13,7 +14,7 @@ from games.serializers import BetSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
-	queryset = User.objects.all()
+	queryset = User.objects.annotate(profit=Sum('bets__result')-Sum('bets__amount'))
 	serializer_class = UserSerializer
 	
 	def get_permissions(self):
