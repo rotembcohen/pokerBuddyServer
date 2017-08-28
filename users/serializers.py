@@ -18,6 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		exclude = ('last_login','is_superuser','is_staff','is_active',
-			'date_joined','groups','user_permissions')
+		fields = ('id','password','username','email','venmo_username','phone_number','first_name',
+			'last_name','picture_url','facebook_token','push_token','profit')
 		extra_kwargs = {'password': {'write_only': True}}
