@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Sum
 from rest_framework import routers, serializers, viewsets
 from rest_framework.decorators import detail_route, list_route, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -17,9 +16,6 @@ class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
 	
-	def get_queryset(self):
-		return User.objects.annotate(profit=Sum('bets__result')-Sum('bets__amount'))
-
 	def get_permissions(self):
 		# allow non-authenticated user to create via POST
 		return (AllowAny() if self.request.method == 'POST'

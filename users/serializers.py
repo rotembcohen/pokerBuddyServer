@@ -4,7 +4,6 @@ from users.models import User
 class UserSerializer(serializers.ModelSerializer):
 
 	password = serializers.CharField(write_only=True)
-	profit = serializers.DecimalField(max_digits=12, decimal_places=2)
 	
 	def create(self, validated_data):
 
@@ -19,5 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = ('id','password','username','email','venmo_username','phone_number','first_name',
-			'last_name','picture_url','facebook_token','push_token','profit')
+			'last_name','picture_url','facebook_token','push_token')
+		
 		extra_kwargs = {'password': {'write_only': True}}
