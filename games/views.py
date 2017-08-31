@@ -135,7 +135,7 @@ class GameViewSet(viewsets.ModelViewSet):
 		game.is_active = False
 		game.save()
 
-		sorted_bets = sorted(game.bets.all(),key=lambda t: t.result - t.amount)
+		sorted_bets = sorted(game.bets.all(),key=lambda t: t.amount - t.result)
 		payments_array = []
 		i = 0
 		j = len(sorted_bets)-1
