@@ -37,8 +37,10 @@ class Payment(models.Model):
 	bet = models.ForeignKey(Bet,related_name='payments',on_delete=models.CASCADE)
 	source = models.ForeignKey(User,related_name='payments',on_delete=models.CASCADE)
 	amount = models.DecimalField(default=0.0,max_digits=12,decimal_places=2,validators=[MinValueValidator(Decimal('0.01'))])
+	is_confirmed = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
 		return str(self.amount) + " of " + str(self.bet) + " paid by " + str(self.source)
+
