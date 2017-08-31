@@ -136,12 +136,11 @@ class GameViewSet(viewsets.ModelViewSet):
 		game.save()
 
 		sorted_bets = sorted(game.bets.all(),key=lambda t: t.amount - t.result)
-		payments_array = []
 		i = 0
 		j = len(sorted_bets)-1
 		loss_leftovers = 0
 		
-		for b in sorted_bets:
+		while i < len(sorted_bets):
 			
 			#break if current i is loser
 			current_win = sorted_bets[i].result - sorted_bets[i].amount
@@ -162,7 +161,7 @@ class GameViewSet(viewsets.ModelViewSet):
 					current_loss = loss_leftovers
 				else:
 					#break if current j is winner
-					current_loss = -1 * sorted_bets[j].result - sorted_bets[j].amount
+					current_loss = -1 * (sorted_bets[j].result - sorted_bets[j].amount)
 					if current_loss <= 0:
 						break
 				
@@ -185,7 +184,7 @@ class GameViewSet(viewsets.ModelViewSet):
 					loss_leftovers = current_loss - amount_left_in_bet
 					amount_left_in_bet = 0
 			#end while
-		#end for					
+		#end while					
 
 		serializer = GameSerializer(context={'request': request}, instance=game)
 
