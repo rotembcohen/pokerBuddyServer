@@ -162,8 +162,8 @@ class GameViewSet(viewsets.ModelViewSet):
 					current_loss = loss_leftovers
 				else:
 					#break if current j is winner
-					current_loss = sorted_bets[j].result - sorted_bets[j].amount
-					if current_loss >= 0:
+					current_loss = -1 * sorted_bets[j].result - sorted_bets[j].amount
+					if current_loss <= 0:
 						break
 				
 				#how much winner needs to receive?
