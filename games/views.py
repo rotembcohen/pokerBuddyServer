@@ -184,6 +184,7 @@ class GameViewSet(viewsets.ModelViewSet):
 					loss_leftovers = current_loss - amount_left_in_bet
 					amount_left_in_bet = 0
 			#end while
+			i = i + 1
 		#end while					
 
 		serializer = GameSerializer(context={'request': request}, instance=game)
