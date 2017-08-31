@@ -129,9 +129,63 @@ class GameViewSet(viewsets.ModelViewSet):
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def finish_game(self,request,identifier=None):
 
+		#TODO: make sure all bet results sum to 0 before finishing game
+
 		game = get_object_or_404(Game,identifier=identifier)
 		game.is_active = False
 		game.save()
+
+		sorted_bets = sorted(game.bets,key=lambda t: t.result - t.amount)
+		payments_array = []
+		i = 0
+		j = len(sorted_bets)-1
+		loss_leftovers = 0
+		
+		for b in sorted_bets:
+			
+			#break if current i is loser
+			current_win = sorted_bets[i].result - sorted_bets[i].amount
+			if current_win <= 0:
+				break
+			
+			amount_left_in_bet = current_win
+
+			while amount_left_in_bet > 0:
+
+				p = Payment()
+				p.is_confirmed = False
+				p.bet = sorted_bets[i]
+				p.source = sorted_bets[j].player
+
+				#how much does loser needs to pay?
+				if loss_leftovers > 0:
+					current_loss = loss_leftovers
+				else:
+					#break if current j is winner
+					current_loss = sorted_bets[j].result - sorted_bets[j].amount
+					if current_loss >= 0:
+						break
+				
+				#how much winner needs to receive?
+				if amount_left_in_bet >= current_loss:
+					#current winner needs more or equal to what loser lost
+					p.amount = current_loss
+					p.save()
+					
+					#continue to next loser with updated amount
+					amount_left_in_bet = amount_left_in_bet - current_loss
+					loss_leftovers = 0
+					j = j - 1
+				
+				else:
+					#current winner needs less than loser lost
+					p.amount = amount_left_in_bet
+					p.save()
+					
+					loss_leftovers = current_loss - amount_left_in_bet
+					amount_left_in_bet = 0
+			#end while
+		#end for					
 
 		serializer = GameSerializer(context={'request': request}, instance=game)
 
