@@ -193,7 +193,28 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
+
+	#TODO: permissions to host and player only
+	#TODO: change identifier to payment_id
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def confirm_payment_receipt(self,request,identifier=None):
+
+		payment_id = request.data['payment_id']
+		
+		payment = get_object_or_404(Payment,pk=payment_id)
+		payment.is_confirmed = True
+		payment.save()
+
+		game = payment.bet.game
+		
+		serializer = GameSerializer(context={'request': request}, instance=game)
+
+		pusher_client.trigger(game.identifier, 'game-update', {'game': serializer.data});
+
+		return Response(serializer.data)
+
 	#TODO: change permissions to user and host only
+	#TODO: remove this when 0.2 is retired
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def confirm_payment(self,request,identifier=None):
 
