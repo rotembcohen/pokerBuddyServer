@@ -20,7 +20,7 @@ class BetSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Bet
-		fields = ('id','player','game','payments','amount','result')
+		fields = ('id','player','game','payments','amount','result','created_at')
 
 class GameSerializer(serializers.ModelSerializer):
 
