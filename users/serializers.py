@@ -17,7 +17,20 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		fields = ('id','password','username','email','venmo_username','phone_number','first_name',
+		fields = ('id','password','username','venmo_username','first_name',
 			'last_name','picture_url','facebook_token','push_token')
 		
 		extra_kwargs = {'password': {'write_only': True}}
+
+class UserMinimalSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = User
+		fields = ('id','username','venmo_username','first_name','last_name','picture_url')
+
+
+class UserPaymentSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = User
+		fields = ('venmo_username','first_name','last_name')

@@ -268,4 +268,14 @@ class GameViewSet(viewsets.ModelViewSet):
 
 		return Response(serializer.data)
 
+	@list_route()
+	def active_games(self, request):
+		user = request.user
+		q = self.get_queryset().filter(bets__player=user,is_active=True).values('identifier')
+		return Response(list(q))
 
+	@list_route()
+	def past_games(self, request):
+		user = request.user
+		q = self.get_queryset().filter(bets__player=user,is_active=False).values('identifier')
+		return Response(list(q))
