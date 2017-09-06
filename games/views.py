@@ -271,11 +271,11 @@ class GameViewSet(viewsets.ModelViewSet):
 	@list_route()
 	def active_games(self, request):
 		user = request.user
-		q = self.get_queryset().filter(bets__player=user,is_active=True).values('identifier')
+		q = self.get_queryset().filter(bets__player=user,is_active=True).values('identifier','created_at')
 		return Response(list(q))
 
 	@list_route()
 	def past_games(self, request):
 		user = request.user
-		q = self.get_queryset().filter(bets__player=user,is_active=False).values('identifier')
+		q = self.get_queryset().filter(bets__player=user,is_active=False).values('identifier','created_at')
 		return Response(list(q))
