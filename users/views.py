@@ -52,6 +52,20 @@ class UserViewSet(viewsets.ModelViewSet):
 		return Response(serializer.data)
 
 	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def update_settings(self,request,pk=None):
+
+		user = get_object_or_404(User,pk=pk)
+		user.venmo_username = request.data['venmo_username']
+		user.default_min_bet = request.data['default_min_bet']
+		user.buy_in_intervals = request.data['buy_in_intervals']
+		user.chip_basic_unit = request.data['chip_basic_unit']
+		user.save()
+
+		serializer = UserSerializer(context={'request': request}, instance=user)
+
+		return Response(serializer.data)
+
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
 	def update_venmo(self,request,pk=None):
 
 		user = get_object_or_404(User,pk=pk)
