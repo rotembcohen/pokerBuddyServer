@@ -16,12 +16,13 @@ from games.serializers import GameSerializer
 import pusher
 import random
 import string
+import os
 
 pusher_client = pusher.Pusher(
-	app_id='382853',
-	key='442e9fce1c86b001266e',
-	secret='c8da83b9b8390ec9a2c3',
-	cluster='us2',
+	app_id=os.environ.get('PUSHER_APP_ID'),
+	key=os.environ.get('PUSHER_KEY'),
+	secret=os.environ.get('PUSHER_SECRET'),
+	cluster=os.environ.get('PUSHER_CLUSTER'),
 	ssl=True
 )
 
