@@ -20,6 +20,7 @@ class User(AbstractUser):
 	default_min_bet = models.PositiveSmallIntegerField(default=20)
 	buy_in_intervals = models.PositiveSmallIntegerField(default=5)
 	chip_basic_unit = models.DecimalField(default=0.25,max_digits=12,decimal_places=2,validators=[MinValueValidator(Decimal('0.01'))])
+	app_version = models.CharField(max_length=255, default="1.2")
 
 	def __unicode__(self):
 		if (self.first_name and self.last_name):
