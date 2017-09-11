@@ -86,3 +86,15 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer = UserSerializer(context={'request': request}, instance=user)
 
 		return Response(serializer.data)
+
+	@detail_route(methods=['post'], permission_classes=[IsAuthenticated])
+	def update_app_version(self,request,pk=None):
+	
+		user = get_object_or_404(User,pk=pk)
+		user.app_version = request.data['app_version']
+		user.save()
+
+		serializer = UserSerializer(context={'request': request}, instance=user)
+
+		return Response(serializer.data)
+
