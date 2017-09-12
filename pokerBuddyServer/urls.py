@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from django.conf.urls import url, include
-from users.views import UserViewSet
+from users.views import UserViewSet, UpdatePassword
 from games.views import GameViewSet
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     #url(r'^api-token-auth/', views.obtain_auth_token),
-    url(r'^authenticate/', CustomObtainAuthToken.as_view())
+    url(r'^authenticate/', CustomObtainAuthToken.as_view()),
+    url(r'^reset_password/', UpdatePassword.as_view())
 ]
