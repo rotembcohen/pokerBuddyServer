@@ -13,6 +13,7 @@ from games.serializers import GameSerializer
 
 #from pokerBuddyServer import notifications
 
+from decimal import *
 import pusher
 import random
 import string
@@ -136,7 +137,7 @@ class GameViewSet(viewsets.ModelViewSet):
 		game.is_active = False
 		game.save()
 
-		sorted_bets = sorted(game.bets.all(),key=lambda t: t.amount - t.result)
+		sorted_bets = sorted(game.bets.all(),key=lambda t: Decimal(t.amount or 0) - Decimal(t.result or 0))
 		i = 0
 		j = len(sorted_bets)-1
 		loss_leftovers = 0
